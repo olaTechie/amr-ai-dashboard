@@ -56,8 +56,8 @@ export default function AboutPage() {
         <section className="mb-8">
           <h2 className="text-sm font-bold text-dark-blue mb-2">How to Cite</h2>
           <div className="bg-light-blue/30 border border-light-blue rounded-lg p-4 text-sm text-navy">
-            [Author names]. Application of Artificial Intelligence in Antimicrobial Resistance Research:
-            A Scoping Review. [Year]. Interactive Dashboard available at:
+            Ja&apos;afar IK, Shantikumar S, Uthman OA. Application of Artificial Intelligence in Antimicrobial Resistance Research:
+            A Scoping Review. 2026. Interactive Dashboard available at:
             https://olatechie.github.io/amr-ai-dashboard/
           </div>
         </section>
