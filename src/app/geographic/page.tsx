@@ -6,13 +6,15 @@ import KeyInsight from "@/components/KeyInsight";
 import ChartSection from "@/components/ChartSection";
 import HorizontalBar from "@/components/charts/HorizontalBar";
 import DonutChart from "@/components/charts/DonutChart";
+import WorldMap from "@/components/charts/WorldMap";
 
 export default function GeographicPage() {
   const [studies, setStudies] = useState<Study[]>([]);
   useEffect(() => { loadStudies().then(setStudies); }, []);
   if (!studies.length) return <div className="flex items-center justify-center min-h-screen text-gray-400">Loading...</div>;
 
-  const countryCounts = toSorted(countBy(studies, s => s.country), 15);
+  const countryRaw = countBy(studies, s => s.country);
+  const countryCounts = toSorted(countryRaw, 15); // filterNoise=true by default
   const regionCounts = toSorted(countBy(studies, s => s.who_region));
   const incomeCounts = toSorted(countBy(studies, s => s.income));
   const multicentre = studies.filter(s => s.multicentre === true).length;
@@ -22,6 +24,7 @@ export default function GeographicPage() {
     { name: "Single-centre", value: singlecentre },
     { name: "NR", value: studies.length - multicentre - singlecentre },
   ];
+  const maxCountry = countryCounts[0]?.value || 1;
 
   return (
     <div className="p-10">
@@ -32,19 +35,26 @@ export default function GeographicPage() {
         Studies span {new Set(studies.map(s => s.country).filter(Boolean)).size} countries across all 6 WHO regions, though China and the USA dominate the landscape.
       </KeyInsight>
 
+      {/* World Map — full width */}
+      <div className="mb-6">
+        <ChartSection figure="Figure 2" title="Global Distribution of AI-AMR Studies" caption="Countries shaded by study count. Hover for details.">
+          <WorldMap data={countryRaw} maxValue={maxCountry} />
+        </ChartSection>
+      </div>
+
       <div className="grid grid-cols-2 gap-6 mb-6">
-        <ChartSection figure="Figure 2" title="Top 15 Countries by Study Count" caption="n = studies with country reported">
+        <ChartSection figure="Figure 3" title="Top 15 Countries by Study Count" caption="Excluding unknown/not specified">
           <HorizontalBar data={countryCounts} color="#1B3A5C" />
         </ChartSection>
-        <ChartSection figure="Figure 3" title="WHO Region Distribution">
+        <ChartSection figure="Figure 4" title="WHO Region Distribution">
           <DonutChart data={regionCounts} />
         </ChartSection>
       </div>
       <div className="grid grid-cols-2 gap-6">
-        <ChartSection figure="Figure 4" title="World Bank Income Classification">
+        <ChartSection figure="Figure 5" title="World Bank Income Classification">
           <HorizontalBar data={incomeCounts} color="#009688" />
         </ChartSection>
-        <ChartSection figure="Figure 5" title="Single vs Multicentre Studies">
+        <ChartSection figure="Figure 6" title="Single vs Multicentre Studies">
           <DonutChart data={centreData} />
         </ChartSection>
       </div>

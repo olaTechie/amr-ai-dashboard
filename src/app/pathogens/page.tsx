@@ -12,10 +12,10 @@ export default function PathogensPage() {
   useEffect(() => { loadStudies().then(setStudies); }, []);
   if (!studies.length) return <div className="flex items-center justify-center min-h-screen text-gray-400">Loading...</div>;
 
-  const pathogenCounts = toSorted(countArrayField(studies, "pathogens"), 15);
+  const pathogenCounts = toSorted(countArrayField(studies, "pathogens"), 10);
   const gramCounts = toSorted(countBy(studies, s => s.pathogen_gram));
-  const resistanceCounts = toSorted(countBy(studies, s => s.resistance_type));
-  const drugClassCounts = toSorted(countArrayField(studies, "drug_classes"), 12);
+  const resistanceCounts = toSorted(countBy(studies, s => s.resistance_type), 10);
+  const drugClassCounts = toSorted(countArrayField(studies, "drug_classes"), 10);
 
   return (
     <div className="p-10">
@@ -27,18 +27,18 @@ export default function PathogensPage() {
       </KeyInsight>
 
       <div className="grid grid-cols-2 gap-6 mb-6">
-        <ChartSection figure="Figure 11" title="Top 15 Pathogens by Study Count">
+        <ChartSection figure="Figure 12" title="Top 10 Pathogens by Study Count" caption="Excluding unknown/not specified">
           <HorizontalBar data={pathogenCounts} color="#009688" />
         </ChartSection>
-        <ChartSection figure="Figure 12" title="Gram Classification">
+        <ChartSection figure="Figure 13" title="Gram Classification">
           <DonutChart data={gramCounts} />
         </ChartSection>
       </div>
       <div className="grid grid-cols-2 gap-6">
-        <ChartSection figure="Figure 13" title="Resistance Type Distribution">
+        <ChartSection figure="Figure 14" title="Resistance Type Distribution (Top 10)">
           <HorizontalBar data={resistanceCounts} color="#C00000" />
         </ChartSection>
-        <ChartSection figure="Figure 14" title="Drug Classes Studied">
+        <ChartSection figure="Figure 15" title="Drug Classes Studied (Top 10)">
           <HorizontalBar data={drugClassCounts} color="#FF8F00" />
         </ChartSection>
       </div>

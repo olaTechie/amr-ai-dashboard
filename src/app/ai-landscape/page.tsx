@@ -12,10 +12,10 @@ export default function AiLandscapePage() {
   useEffect(() => { loadStudies().then(setStudies); }, []);
   if (!studies.length) return <div className="flex items-center justify-center min-h-screen text-gray-400">Loading...</div>;
 
-  const taskCounts = toSorted(countBy(studies, s => s.ai_task));
-  const modelCounts = toSorted(countArrayField(studies, "models"), 15);
+  const taskCounts = toSorted(countBy(studies, s => s.ai_task), 10);
+  const modelCounts = toSorted(countArrayField(studies, "models"), 10);
   const dataTypeCounts = toSorted(countArrayField(studies, "data_types"), 8);
-  const validationCounts = toSorted(countBy(studies, s => s.validation));
+  const validationCounts = toSorted(countBy(studies, s => s.validation), 10);
   const codeYes = studies.filter(s => s.code_available === true).length;
   const dataYes = studies.filter(s => s.data_available === true).length;
 
@@ -29,23 +29,23 @@ export default function AiLandscapePage() {
       </KeyInsight>
 
       <div className="grid grid-cols-2 gap-6 mb-6">
-        <ChartSection figure="Figure 6" title="AI Task Distribution">
+        <ChartSection figure="Figure 7" title="AI Task Distribution (Top 10)" caption="Excluding unknown/not specified">
           <HorizontalBar data={taskCounts} color="#1B3A5C" />
         </ChartSection>
-        <ChartSection figure="Figure 7" title="Most Common ML Models (Top 15)">
+        <ChartSection figure="Figure 8" title="Most Common ML Models (Top 10)">
           <HorizontalBar data={modelCounts} color="#4472C4" />
         </ChartSection>
       </div>
       <div className="grid grid-cols-2 gap-6 mb-6">
-        <ChartSection figure="Figure 8" title="Data Type Breakdown">
+        <ChartSection figure="Figure 9" title="Data Type Breakdown">
           <DonutChart data={dataTypeCounts} />
         </ChartSection>
-        <ChartSection figure="Figure 9" title="Validation Approach">
+        <ChartSection figure="Figure 10" title="Validation Approach (Top 10)">
           <HorizontalBar data={validationCounts} color="#2F5496" />
         </ChartSection>
       </div>
 
-      <ChartSection figure="Figure 10" title="Code & Data Availability">
+      <ChartSection figure="Figure 11" title="Code & Data Availability">
         <div className="flex items-center justify-center gap-16 h-full">
           <div className="text-center">
             <div className="text-5xl font-extrabold text-teal">{Math.round(codeYes / studies.length * 100)}%</div>

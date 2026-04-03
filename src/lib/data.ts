@@ -32,10 +32,22 @@ export function countArrayField(studies: Study[], field: keyof Study): Record<st
   return counts;
 }
 
-export function toSorted(counts: Record<string, number>, limit?: number): { name: string; value: number }[] {
-  const arr = Object.entries(counts)
+const NOISE_LABELS = new Set([
+  "unknown", "nr", "not reported", "not specified", "n/a", "na", "none",
+  "null", "other", "unspecified", "mixed", "",
+]);
+
+export function toSorted(
+  counts: Record<string, number>,
+  limit?: number,
+  filterNoise = true
+): { name: string; value: number }[] {
+  let arr = Object.entries(counts)
     .map(([name, value]) => ({ name, value }))
     .sort((a, b) => b.value - a.value);
+  if (filterNoise) {
+    arr = arr.filter(d => !NOISE_LABELS.has(d.name.toLowerCase().trim()));
+  }
   return limit ? arr.slice(0, limit) : arr;
 }
 
