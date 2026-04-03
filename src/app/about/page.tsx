@@ -63,15 +63,6 @@ export default function AboutPage() {
         </section>
       </ScrollReveal>
 
-      <ScrollReveal delay={0.4}>
-        <section>
-          <h2 className="text-sm font-bold text-dark-blue mb-2">Links</h2>
-          <ul className="text-sm text-med-blue space-y-1">
-            <li><a href="https://github.com/olaTechie/amr-ai-dashboard" target="_blank" rel="noopener noreferrer" className="hover:underline">GitHub Repository &rarr;</a></li>
-            <li><a href="https://olatechie.github.io/amr-ai-workbench/" target="_blank" rel="noopener noreferrer" className="hover:underline">Full Review Workbench (CRUD) &rarr;</a></li>
-          </ul>
-        </section>
-      </ScrollReveal>
     </div>
   );
 }
