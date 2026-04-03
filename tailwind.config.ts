@@ -1,16 +1,18 @@
 import type { Config } from "tailwindcss";
-
 const config: Config = {
-  content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+  content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        navy: "#1B3A5C",
+        "dark-blue": "#2F5496",
+        "med-blue": "#4472C4",
+        "light-blue": "#D6E4F0",
+        teal: "#009688",
+        amber: "#FF8F00",
+        danger: "#C00000",
+        zebra: "#F1F5F9",
+        surface: "#F8FAFC",
       },
     },
   },
