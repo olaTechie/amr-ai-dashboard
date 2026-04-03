@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { loadStudies, countBy, countArrayField, toSorted } from "@/lib/data";
+import { loadStudies, countBy, countArrayField, toSorted, normaliseAiTask } from "@/lib/data";
 import type { Study } from "@/lib/types";
 import KeyInsight from "@/components/KeyInsight";
 import ChartSection from "@/components/ChartSection";
@@ -12,7 +12,7 @@ export default function AiLandscapePage() {
   useEffect(() => { loadStudies().then(setStudies); }, []);
   if (!studies.length) return <div className="flex items-center justify-center min-h-screen text-gray-400">Loading...</div>;
 
-  const taskCounts = toSorted(countBy(studies, s => s.ai_task), 10);
+  const taskCounts = toSorted(countBy(studies, s => normaliseAiTask(s.ai_task)), 10);
   const modelCounts = toSorted(countArrayField(studies, "models"), 10);
   const dataTypeCounts = toSorted(countArrayField(studies, "data_types"), 8);
   const validationCounts = toSorted(countBy(studies, s => s.validation), 10);

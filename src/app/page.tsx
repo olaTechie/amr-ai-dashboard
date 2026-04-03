@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { loadStudies, countBy, uniqueCountries, countArrayField, toSorted } from "@/lib/data";
+import { loadStudies, countBy, uniqueCountries, countArrayField, toSorted, normaliseAiTask } from "@/lib/data";
 import type { Study } from "@/lib/types";
 import StatCounter from "@/components/StatCounter";
 import GlassCard from "@/components/GlassCard";
@@ -34,7 +34,7 @@ export default function HomePage() {
   if (!studies.length) return <div className="flex items-center justify-center min-h-screen text-gray-400">Loading...</div>;
 
   const nCountries = uniqueCountries(studies);
-  const taskCounts = countBy(studies, s => s.ai_task);
+  const taskCounts = countBy(studies, s => normaliseAiTask(s.ai_task));
   const nTasks = Object.keys(taskCounts).length;
   const topTask = toSorted(taskCounts, 1)[0];
   const pathogenCounts = countArrayField(studies, "pathogens");

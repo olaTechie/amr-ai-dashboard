@@ -54,3 +54,49 @@ export function toSorted(
 export function uniqueCountries(studies: Study[]): number {
   return new Set(studies.map(s => s.country).filter(Boolean)).size;
 }
+
+/**
+ * Normalise verbose ai_task values to clean categories.
+ * Many values in the JSON are full sentences — map them to standard labels.
+ */
+const AI_TASK_RULES: [RegExp, string][] = [
+  [/resistance.predict|predict.*resist|amr.*predict|phenotype.*predict|susceptib.*predict|predict.*susceptib/i, "Resistance Prediction"],
+  [/drug.discover|antibiotic.discover|compound.screen|virtual.screen|qsar/i, "Drug Discovery"],
+  [/amp.design|antimicrobial.peptide|peptide.design|peptide.generat/i, "AMP Design"],
+  [/treatment.outcome|treatment.fail|prognos|unfavorable.*treat/i, "Treatment Outcome"],
+  [/diagnos|detect.*resist|identif.*resist|screen/i, "Diagnosis / Detection"],
+  [/species.id|pathogen.id|organism.id|differentiat.*species/i, "Species ID"],
+  [/surveil|epidemiol|trend|forecast|outbreak/i, "Surveillance"],
+  [/dos(?:e|ing)|pharmacokinet|pk.pd/i, "Dosing Optimisation"],
+  [/risk.predict|risk.factor|risk.stratif|risk.assess|bsi.*predict|infection.*predict|coloniz/i, "Risk Prediction"],
+  [/arg.*annot|gene.*annot|resistome|arg.*detect/i, "ARG Annotation"],
+  [/image.analy|radiograph|chest.x.ray|cxr|microscop/i, "Imaging / Radiology"],
+  [/nlp|text.min|natural.language|information.extract/i, "NLP / Text Mining"],
+  [/classif/i, "Classification"],
+  [/benchmark|evaluat.*tool|compar.*method/i, "Benchmarking"],
+];
+
+export function normaliseAiTask(raw: string | null): string | null {
+  if (!raw) return null;
+  const lower = raw.toLowerCase();
+  // Already clean?
+  if (lower === "resistance-prediction") return "Resistance Prediction";
+  if (lower === "drug-discovery") return "Drug Discovery";
+  if (lower === "amp-design") return "AMP Design";
+  if (lower === "treatment-outcome") return "Treatment Outcome";
+  if (lower === "diagnosis") return "Diagnosis / Detection";
+  if (lower === "surveillance") return "Surveillance";
+  if (lower === "species-id") return "Species ID";
+  if (lower === "dosing") return "Dosing Optimisation";
+  if (lower === "risk-stratification") return "Risk Prediction";
+  if (lower === "ast-automation") return "AST Automation";
+  if (lower === "arg-annotation") return "ARG Annotation";
+  if (lower === "other") return null; // filter out
+
+  for (const [pattern, label] of AI_TASK_RULES) {
+    if (pattern.test(lower)) return label;
+  }
+  // If > 40 chars, it's a verbose description — skip
+  if (raw.length > 40) return null;
+  return raw;
+}
