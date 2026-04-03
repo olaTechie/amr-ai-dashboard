@@ -149,7 +149,7 @@
     "pathogen_gram": null,
     "drug_classes": null,
     "antibiotics": null,
-    "resistance_type": "Continuous",
+    "resistance_type": null,
     "ai_task": null,
     "models": null,
     "best_model": "SVM",
@@ -404,7 +404,7 @@
     "pathogen_gram": null,
     "drug_classes": null,
     "antibiotics": null,
-    "resistance_type": "Binary R/S",
+    "resistance_type": null,
     "ai_task": null,
     "models": null,
     "best_model": "DIF-based",
@@ -3714,7 +3714,7 @@
       "Clinical",
       "Microbiological"
     ],
-    "resistance_type": "**Mode o...",
+    "resistance_type": null,
     "ai_task": "Drug Discovery",
     "models": [
       "CNN",
@@ -4105,10 +4105,8 @@
     "first_author": "Cristina",
     "year": 2024,
     "doi": "10.1001/j...",
-    "country": "Greater",
-    "countries_all": [
-      "Greater"
-    ],
+    "country": null,
+    "countries_all": null,
     "design": null,
     "sample_size": 39,
     "data_types": [
@@ -4153,10 +4151,8 @@
     "study_id": 93,
     "first_author": "Qiqiang",
     "year": 2024,
-    "country": "Single center",
-    "countries_all": [
-      "Single center"
-    ],
+    "country": null,
+    "countries_all": null,
     "setting": "Second Affiliated H...",
     "multicentre": false,
     "data_types": [
@@ -4260,7 +4256,7 @@
     "pathogens": [
       "Acinetobacter baumannii"
     ],
-    "resistance_type": "imipenem (IPM), me...",
+    "resistance_type": null,
     "ai_task": "Resistance Prediction",
     "models": [
       "DNN"
@@ -4331,10 +4327,8 @@
     "study_id": 97,
     "first_author": "Xixi",
     "year": 2024,
-    "country": "Clinical",
-    "countries_all": [
-      "Clinical"
-    ],
+    "country": null,
+    "countries_all": null,
     "design": null,
     "sample_size": 938,
     "data_types": [
@@ -4345,7 +4339,7 @@
     "pathogens": [
       "Helicobacter pylori"
     ],
-    "resistance_type": "Binary R/S",
+    "resistance_type": null,
     "ai_task": "Resistance Prediction",
     "models": [
       "MLP"
@@ -4461,7 +4455,7 @@
       "Clinical",
       "Microbiological"
     ],
-    "resistance_type": "Binary R/S",
+    "resistance_type": null,
     "ai_task": "Resistance Prediction",
     "models": [
       "RF",
@@ -4509,7 +4503,7 @@
       "Pseudomonas aeruginosa",
       "Staphylococcus aureus"
     ],
-    "resistance_type": "Binary R/S",
+    "resistance_type": null,
     "ai_task": "Resistance Prediction",
     "models": [
       "RF",
@@ -4553,7 +4547,7 @@
     "pathogens": [
       "Enterococcus faecium"
     ],
-    "resistance_type": "**External Valida...",
+    "resistance_type": null,
     "ai_task": "Resistance Prediction",
     "models": [
       "LR",
@@ -4598,7 +4592,7 @@
       "Clinical",
       "Microbiological"
     ],
-    "resistance_type": "Binary R/S",
+    "resistance_type": null,
     "ai_task": "Resistance Prediction",
     "models": [
       "RF",
@@ -4704,10 +4698,8 @@
     "year": 2024,
     "title": "\"Machine l... Study Limitations Acknowledged: - Single reference genome (H37Rv) may exclude important genomic regions - ",
     "journal": "Drug",
-    "country": "East Africa",
-    "countries_all": [
-      "East Africa"
-    ],
+    "country": null,
+    "countries_all": null,
     "design": null,
     "setting": "Hospital",
     "sample_size": 462,
@@ -4818,7 +4810,7 @@
     "pathogens": [
       "Klebsiella pneumoniae"
     ],
-    "resistance_type": "**Gen...",
+    "resistance_type": null,
     "ai_task": "Resistance Prediction",
     "models": [
       "RF",
@@ -4911,7 +4903,7 @@
       "Citrobacter koseri",
       "Enterobacter cloacae"
     ],
-    "resistance_type": "ESBL",
+    "resistance_type": null,
     "ai_task": "Diagnosis / Detection",
     "validation": "External",
     "prospective": true,
@@ -4992,7 +4984,7 @@
     "pathogens": [
       "Exclusion reason"
     ],
-    "resistance_type": "Binary R/S",
+    "resistance_type": null,
     "ai_task": "Resistance Prediction",
     "models": [
       "RF",
@@ -5046,7 +5038,7 @@
       "Pseudomonas aeruginosa",
       "Staphylococcus aureus"
     ],
-    "resistance_type": "Binary R/S",
+    "resistance_type": null,
     "ai_task": "Resistance Prediction",
     "validation": "External",
     "prospective": true,
@@ -5089,7 +5081,7 @@
     "pathogens": [
       "Data modality"
     ],
-    "resistance_type": "MDR",
+    "resistance_type": null,
     "ai_task": "Resistance Prediction",
     "models": [
       "LR"
@@ -5126,7 +5118,7 @@
     "pathogens": [
       "Klebsiella pneumoniae"
     ],
-    "resistance_type": "Binary R/S",
+    "resistance_type": null,
     "ai_task": "Resistance Prediction",
     "models": [
       "RF",
@@ -6680,7 +6672,7 @@
     "pathogens": null,
     "drug_classes": null,
     "antibiotics": null,
-    "resistance_type": "Binary R/S",
+    "resistance_type": null,
     "data_types": [
       "Accelerometer data",
       "Gyroscope data",
@@ -7624,7 +7616,7 @@
     "pathogen_gram": "Positive",
     "drug_classes": null,
     "antibiotics": null,
-    "resistance_type": "Drug-resistant TB",
+    "resistance_type": "MDR",
     "ai_task": "Imaging / Radiology",
     "models": null,
     "best_model": null,
@@ -8235,7 +8227,7 @@
     "title": null,
     "journal": null,
     "doi": null,
-    "country": "Jamia Hamdard",
+    "country": null,
     "countries_all": null,
     "who_region": null,
     "income": "UMIC",
@@ -9556,7 +9548,7 @@
     "pathogen_gram": null,
     "drug_classes": null,
     "antibiotics": null,
-    "resistance_type": "Drug resistance",
+    "resistance_type": "MDR",
     "ai_task": "Resistance Prediction",
     "models": [
       "RF",
@@ -9650,7 +9642,7 @@
     "title": "Deep learning for antibiotic susceptibility prediction",
     "journal": "PLoS Computational Biology",
     "doi": null,
-    "country": "Multi-country",
+    "country": null,
     "countries_all": null,
     "who_region": null,
     "income": "Mixed",
@@ -9671,7 +9663,7 @@
     "pathogen_gram": null,
     "drug_classes": null,
     "antibiotics": null,
-    "resistance_type": "Antibiotic susceptibility",
+    "resistance_type": "Binary R/S",
     "ai_task": "Resistance Prediction",
     "models": [
       "NN",
@@ -9730,7 +9722,7 @@
     "pathogen_gram": null,
     "drug_classes": null,
     "antibiotics": null,
-    "resistance_type": "Antibiotic resistance",
+    "resistance_type": "Binary R/S",
     "ai_task": "Resistance Prediction",
     "models": [
       "LR",
@@ -9787,7 +9779,7 @@
     "pathogen_gram": null,
     "drug_classes": null,
     "antibiotics": null,
-    "resistance_type": "Antibiotic resistance",
+    "resistance_type": "Binary R/S",
     "ai_task": "Resistance Prediction",
     "models": [
       "NN",
@@ -10211,7 +10203,7 @@
     "pathogen_gram": null,
     "drug_classes": null,
     "antibiotics": null,
-    "resistance_type": "Binary R/S",
+    "resistance_type": null,
     "ai_task": null,
     "models": null,
     "best_model": null,
@@ -10404,7 +10396,7 @@
     "title": "Prediction of Failure in Vancomycin-Treated Methicillin-Resistant Staphylococcus aureus Bloodstream Infection: a Clinica",
     "journal": "Antimicrobial Agents and Chemotherapy (peer-reviewed, indexed)",
     "doi": null,
-    "country": "Henry Ford Hospital",
+    "country": null,
     "countries_all": null,
     "who_region": null,
     "income": null,
@@ -11562,10 +11554,8 @@
     "title": "Monitoring Longitudinal Trends and Assessment of the Health Risk of *Shigella flexneri* Antimicrobial Resistance",
     "journal": "Environmental Science & Technology",
     "doi": "10.1021/acs.est.2c08766",
-    "country": "Global",
-    "countries_all": [
-      "Global"
-    ],
+    "country": null,
+    "countries_all": null,
     "who_region": "Mixed",
     "income": "Mixed",
     "design": "Model development",
