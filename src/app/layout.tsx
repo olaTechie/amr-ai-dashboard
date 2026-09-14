@@ -4,15 +4,15 @@ import Sidebar from "@/components/Sidebar";
 
 export const metadata: Metadata = {
   title: "AI in AMR Research — Scoping Review Dashboard",
-  description: "Interactive dashboard exploring 252 studies on the application of artificial intelligence in antimicrobial resistance research.",
+  description: "Interactive evidence dashboard for 346 validated studies on artificial intelligence in antimicrobial resistance research.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="flex">
+      <body className="flex min-h-screen flex-col lg:flex-row">
         <Sidebar />
-        <main className="flex-1 min-h-screen overflow-y-auto">{children}</main>
+        <main className="min-h-screen min-w-0 flex-1 overflow-y-auto">{children}</main>
       </body>
     </html>
   );

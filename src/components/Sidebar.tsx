@@ -1,7 +1,8 @@
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Globe, Cpu, Bug, BarChart3, TrendingUp, Table, Info } from "lucide-react";
+import { BarChart3, Bug, Cpu, Globe, Home, Info, Scale, Table, TrendingUp } from "lucide-react";
 
 const NAV = [
   { href: "/", label: "Overview", icon: Home },
@@ -9,6 +10,7 @@ const NAV = [
   { href: "/ai-landscape", label: "AI Landscape", icon: Cpu },
   { href: "/pathogens", label: "Pathogens", icon: Bug },
   { href: "/performance", label: "Performance", icon: BarChart3 },
+  { href: "/reporting", label: "Reporting & Equity", icon: Scale },
   { href: "/trends", label: "Trends", icon: TrendingUp },
   { href: "/explorer", label: "Study Explorer", icon: Table },
   { href: "/about", label: "About", icon: Info },
@@ -19,12 +21,15 @@ export default function Sidebar() {
   const basePath = process.env.NODE_ENV === "production" ? "/amr-ai-dashboard" : "";
 
   return (
-    <aside className="w-56 bg-gradient-to-b from-[#0a1628] to-navy text-white flex flex-col shrink-0 min-h-screen sticky top-0">
-      <div className="p-5 border-b border-white/10">
-        <div className="text-[10px] uppercase tracking-[2px] text-med-blue font-bold">Scoping Review</div>
-        <div className="text-sm font-bold mt-1 leading-tight">AI in AMR<br/>Research</div>
+    <aside className="sticky top-0 z-30 flex w-full shrink-0 flex-col bg-[#0a1628] text-white lg:h-screen lg:w-60">
+      <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 lg:block lg:py-5">
+        <div>
+          <div className="text-[9px] font-bold uppercase tracking-[2px] text-blue-300">Scoping review</div>
+          <div className="mt-1 text-sm font-bold leading-tight">AI in AMR Research</div>
+        </div>
+        <div className="text-[9px] text-white/40 lg:hidden">346 studies</div>
       </div>
-      <nav className="flex-1 py-4">
+      <nav aria-label="Dashboard sections" className="flex flex-1 overflow-x-auto py-2 lg:block lg:overflow-visible lg:py-4">
         {NAV.map(({ href, label, icon: Icon }) => {
           const fullHref = `${basePath}${href}`;
           const active = pathname === fullHref || pathname === href ||
@@ -33,21 +38,20 @@ export default function Sidebar() {
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-3 px-5 py-2.5 text-xs transition-all ${
+              className={`flex min-h-11 shrink-0 items-center gap-2 border-b-2 px-4 text-[11px] transition-colors lg:border-b-0 lg:border-l-2 lg:px-5 lg:py-2.5 ${
                 active
-                  ? "bg-white/10 text-white border-l-2 border-med-blue font-semibold"
-                  : "text-white/60 hover:text-white hover:bg-white/5 border-l-2 border-transparent"
+                  ? "border-teal bg-white/10 font-semibold text-white"
+                  : "border-transparent text-white/60 hover:bg-white/5 hover:text-white"
               }`}
             >
-              <Icon size={15} />
-              {label}
+              <Icon size={15} aria-hidden="true" />
+              <span className="whitespace-nowrap">{label}</span>
             </Link>
           );
         })}
       </nav>
-      <div className="p-5 border-t border-white/10 text-[9px] text-white/30">
-        252 studies &bull; 2000&ndash;2026<br />
-        Arksey &amp; O&apos;Malley Framework
+      <div className="hidden border-t border-white/10 p-5 text-[9px] leading-relaxed text-white/35 lg:block">
+        346 validated studies<br />215 extraction fields<br />2000–2026
       </div>
     </aside>
   );
