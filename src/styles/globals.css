@@ -2,12 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-surface text-[#111] antialiased;
-  font-family: "Inter", system-ui, sans-serif;
+:root {
+  color-scheme: light;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 6px; }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #f8fafc;
+}
+
+body {
+  @apply bg-surface text-[#142033] antialiased;
+  font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+}
+
+button,
+input,
+select,
+a {
+  outline-offset: 3px;
+}
+
+:focus-visible {
+  outline: 2px solid #009688;
+}
+
+::-webkit-scrollbar { width: 7px; height: 7px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #c4c4c4; border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: #b8c2cf; border-radius: 6px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

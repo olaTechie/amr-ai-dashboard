@@ -1,59 +1,54 @@
 "use client";
+
 import { useEffect, useState } from "react";
-import { loadStudies, countBy, countArrayField, toSorted } from "@/lib/data";
-import type { Study } from "@/lib/types";
-import KeyInsight from "@/components/KeyInsight";
 import ChartSection from "@/components/ChartSection";
-import HorizontalBar from "@/components/charts/HorizontalBar";
 import DonutChart from "@/components/charts/DonutChart";
+import HorizontalBar from "@/components/charts/HorizontalBar";
+import KeyInsight from "@/components/KeyInsight";
+import { countArrayField, countBy, loadStudies, percentage, toSorted } from "@/lib/data";
+import type { Study } from "@/lib/types";
 
 export default function AiLandscapePage() {
   const [studies, setStudies] = useState<Study[]>([]);
   useEffect(() => { loadStudies().then(setStudies); }, []);
-  if (!studies.length) return <div className="flex items-center justify-center min-h-screen text-gray-400">Loading...</div>;
+  if (!studies.length) return <div className="flex min-h-screen items-center justify-center text-gray-400">Loading…</div>;
 
-  const taskCounts = toSorted(countBy(studies, s => s.ai_task), 10);
+  const applicationCounts = toSorted(countArrayField(studies, "ai_application_types"), 10);
   const modelCounts = toSorted(countArrayField(studies, "models"), 10);
-  const dataTypeCounts = toSorted(countArrayField(studies, "data_types"), 8);
-  const validationCounts = toSorted(countBy(studies, s => s.validation), 10);
-  const codeYes = studies.filter(s => s.code_available === true).length;
-  const dataYes = studies.filter(s => s.data_available === true).length;
+  const dataTypeCounts = toSorted(countArrayField(studies, "data_types"), 10);
+  const validationCounts = toSorted(countBy(studies, study => study.validation), 10, false);
+  const codeYes = studies.filter(study => study.code_available === true).length;
+  const dataYes = studies.filter(study => study.data_available === true).length;
 
   return (
-    <div className="p-10">
-      <h1 className="text-2xl font-extrabold text-navy mb-1">AI/ML Landscape</h1>
-      <p className="text-xs text-gray-400 mb-6">AI task types, ML algorithms, data modalities, and validation approaches</p>
+    <div className="mx-auto max-w-7xl p-5 md:p-10">
+      <div className="mb-6 border-b border-gray-200 pb-5">
+        <div className="text-[10px] font-bold uppercase tracking-[2px] text-med-blue">Evidence domain</div>
+        <h1 className="mt-1 text-2xl font-extrabold text-navy">AI/ML landscape</h1>
+        <p className="mt-1 text-xs text-gray-500">Application types, model families, data modalities and validation strategies.</p>
+      </div>
 
       <KeyInsight>
-        Resistance prediction dominates ({taskCounts[0]?.value || 0} studies), but drug discovery and AMP design are rapidly growing AI applications in AMR research.
+        {applicationCounts[0]?.name || "The leading application"} is the most frequently extracted AI application ({applicationCounts[0]?.value || 0} studies); external validation remains documented in {studies.filter(study => study.external_validation === true).length} studies.
       </KeyInsight>
 
-      <div className="grid grid-cols-2 gap-6 mb-6">
-        <ChartSection figure="Figure 7" title="AI Task Distribution (Top 10)" caption="Excluding unknown/not specified">
-          <HorizontalBar data={taskCounts} color="#1B3A5C" />
-        </ChartSection>
-        <ChartSection figure="Figure 8" title="Most Common ML Models (Top 10)">
-          <HorizontalBar data={modelCounts} color="#4472C4" />
-        </ChartSection>
+      <div className="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+        <ChartSection figure="Figure 7" title="AI application types"><HorizontalBar data={applicationCounts} color="#1B3A5C" /></ChartSection>
+        <ChartSection figure="Figure 8" title="Detected model families" caption="Model families are standardised from the extracted model descriptions; one study may contribute to multiple families."><HorizontalBar data={modelCounts} color="#4472C4" /></ChartSection>
       </div>
-      <div className="grid grid-cols-2 gap-6 mb-6">
-        <ChartSection figure="Figure 9" title="Data Type Breakdown">
-          <DonutChart data={dataTypeCounts} />
-        </ChartSection>
-        <ChartSection figure="Figure 10" title="Validation Approach (Top 10)">
-          <HorizontalBar data={validationCounts} color="#2F5496" />
-        </ChartSection>
+      <div className="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+        <ChartSection figure="Figure 9" title="Data modalities"><DonutChart data={dataTypeCounts} /></ChartSection>
+        <ChartSection figure="Figure 10" title="Validation strategy"><HorizontalBar data={validationCounts} color="#2F5496" /></ChartSection>
       </div>
-
-      <ChartSection figure="Figure 11" title="Code & Data Availability">
-        <div className="flex items-center justify-center gap-16 h-full">
+      <ChartSection figure="Figure 11" title="Open research assets">
+        <div className="grid h-full grid-cols-1 place-items-center gap-6 sm:grid-cols-2">
           <div className="text-center">
-            <div className="text-5xl font-extrabold text-teal">{Math.round(codeYes / studies.length * 100)}%</div>
-            <div className="text-xs text-gray-500 mt-1">Code shared ({codeYes}/{studies.length})</div>
+            <div className="text-5xl font-extrabold text-teal">{percentage(codeYes, studies.length)}%</div>
+            <div className="mt-2 text-xs text-gray-500">Code reported as shared ({codeYes}/{studies.length})</div>
           </div>
           <div className="text-center">
-            <div className="text-5xl font-extrabold text-med-blue">{Math.round(dataYes / studies.length * 100)}%</div>
-            <div className="text-xs text-gray-500 mt-1">Data shared ({dataYes}/{studies.length})</div>
+            <div className="text-5xl font-extrabold text-med-blue">{percentage(dataYes, studies.length)}%</div>
+            <div className="mt-2 text-xs text-gray-500">Data reported as shared ({dataYes}/{studies.length})</div>
           </div>
         </div>
       </ChartSection>

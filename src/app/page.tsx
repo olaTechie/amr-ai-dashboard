@@ -1,147 +1,119 @@
 "use client";
+
 import { useEffect, useState } from "react";
-import { loadStudies, countBy, uniqueCountries, countArrayField, toSorted } from "@/lib/data";
-import type { Study } from "@/lib/types";
-import StatCounter from "@/components/StatCounter";
-import GlassCard from "@/components/GlassCard";
-import ScrollReveal from "@/components/ScrollReveal";
-import KeyInsight from "@/components/KeyInsight";
-import ChartSection from "@/components/ChartSection";
 import Link from "next/link";
-import { Globe, Cpu, Bug, BarChart3, TrendingUp, Table, Info } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { BarChart3, Bug, Cpu, FileSearch, Globe, Scale, Table, TrendingUp } from "lucide-react";
+import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import ChartSection from "@/components/ChartSection";
+import GlassCard from "@/components/GlassCard";
+import KeyInsight from "@/components/KeyInsight";
+import StatCounter from "@/components/StatCounter";
+import { countArrayField, loadDataset, percentage, toSorted, uniqueCountries } from "@/lib/data";
 import { COLORS } from "@/lib/theme";
+import type { Dataset } from "@/lib/types";
 
 const NAV_TILES = [
-  { href: "/geographic", icon: Globe, label: "Geographic", desc: "World map & regions" },
-  { href: "/ai-landscape", icon: Cpu, label: "AI Landscape", desc: "Tasks, models, data" },
-  { href: "/pathogens", icon: Bug, label: "Pathogens", desc: "Species & resistance" },
-  { href: "/performance", icon: BarChart3, label: "Performance", desc: "AUROC & maturity" },
+  { href: "/geographic", icon: Globe, label: "Geographic", desc: "Countries, regions and settings" },
+  { href: "/ai-landscape", icon: Cpu, label: "AI Landscape", desc: "Applications, models and data" },
+  { href: "/pathogens", icon: Bug, label: "Pathogens", desc: "Organisms and resistance" },
+  { href: "/performance", icon: BarChart3, label: "Performance", desc: "Validation, AUROC and maturity" },
+  { href: "/reporting", icon: Scale, label: "Reporting & Equity", desc: "Transparency, bias and access" },
   { href: "/trends", icon: TrendingUp, label: "Trends", desc: "Publication timeline" },
-  { href: "/explorer", icon: Table, label: "Study Explorer", desc: "Search all studies" },
-  { href: "/about", icon: Info, label: "About", desc: "Methodology & citation" },
+  { href: "/explorer", icon: Table, label: "Study Explorer", desc: "Search all extracted fields" },
 ];
 
 const MATURITY_LABELS = ["L1 Proof", "L2 Internal", "L3 External", "L4 Prospective", "L5 CDS", "L6 Routine"];
 
 export default function HomePage() {
-  const [studies, setStudies] = useState<Study[]>([]);
+  const [dataset, setDataset] = useState<Dataset | null>(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    loadStudies().then(setStudies);
+    loadDataset().then(setDataset).catch(reason => setError(String(reason)));
   }, []);
 
-  if (!studies.length) return <div className="flex items-center justify-center min-h-screen text-gray-400">Loading...</div>;
+  if (error) return <div className="p-10 text-danger">{error}</div>;
+  if (!dataset) return <div className="flex min-h-screen items-center justify-center text-gray-400">Loading extracted data…</div>;
 
-  const nCountries = uniqueCountries(studies);
-  const taskCounts = countBy(studies, s => s.ai_task);
-  const nTasks = Object.keys(taskCounts).length;
-  const topTask = toSorted(taskCounts, 1)[0];
-  const pathogenCounts = countArrayField(studies, "pathogens");
-  const topPathogen = toSorted(pathogenCounts, 1)[0];
-  const modelCounts = countArrayField(studies, "models");
-  const topModel = toSorted(modelCounts, 1)[0];
-  const aurocStudies = studies.filter(s => s.auroc != null);
-  const medianAuroc = aurocStudies.length > 0
-    ? aurocStudies.map(s => s.auroc!).sort((a, b) => a - b)[Math.floor(aurocStudies.length / 2)]
-    : null;
-
-  // Maturity data
-  const maturityCounts = [0, 0, 0, 0, 0, 0];
-  studies.forEach(s => {
-    if (s.maturity_level && s.maturity_level >= 1 && s.maturity_level <= 6) maturityCounts[s.maturity_level - 1]++;
-  });
-  const maturityData = MATURITY_LABELS.map((label, i) => ({ label, count: maturityCounts[i] }));
+  const { studies, metadata } = dataset;
+  const applicationCounts = toSorted(countArrayField(studies, "ai_application_types"), 1);
+  const pathogenCounts = toSorted(countArrayField(studies, "pathogens"), 1);
+  const modelCounts = toSorted(countArrayField(studies, "models"), 1);
+  const aurocStudies = studies.filter(study => study.auroc != null);
+  const sortedAuroc = aurocStudies.map(study => study.auroc!).sort((a, b) => a - b);
+  const medianAuroc = sortedAuroc.length ? sortedAuroc[Math.floor(sortedAuroc.length / 2)] : null;
+  const maturityCounts = MATURITY_LABELS.map((label, index) => ({
+    label,
+    count: studies.filter(study => study.maturity_level === index + 1).length,
+  }));
+  const maturityKnown = studies.filter(study => study.maturity_level != null).length;
+  const earlyMaturity = studies.filter(study => study.maturity_level != null && study.maturity_level <= 2).length;
 
   return (
     <div>
-      {/* HERO */}
-      <div className="bg-gradient-to-br from-[#0a1628] via-navy to-dark-blue py-16 px-10 text-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(68,114,196,0.15),transparent_60%)]" />
-        <div className="relative">
-          <div className="text-[10px] tracking-[4px] uppercase text-med-blue mb-2">Scoping Review 2026</div>
-          <h1 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">
-            Application of Artificial Intelligence<br />in Antimicrobial Resistance Research
-          </h1>
-          <p className="text-xs text-white/50 mt-3">Arksey &amp; O&apos;Malley Framework &bull; PRISMA-ScR</p>
-
-          <div className="flex justify-center gap-12 mt-10">
-            <StatCounter value={studies.length} label="Studies Included" color="white" />
-            <div className="w-px bg-white/15" />
-            <StatCounter value={nCountries} label="Countries" color="#009688" />
-            <div className="w-px bg-white/15" />
-            <StatCounter value={nTasks} label="AI Task Categories" color="#4472C4" />
-            <div className="w-px bg-white/15" />
-            <StatCounter value={6} label="Maturity Levels" color="#FF8F00" />
+      <header className="relative overflow-hidden bg-gradient-to-r from-[#0a1628] via-navy to-dark-blue px-6 py-9 text-white md:px-10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,rgba(0,150,136,0.16),transparent_38%)]" />
+        <div className="relative max-w-6xl">
+          <div className="mb-2 text-[10px] font-bold uppercase tracking-[3px] text-blue-300">PRISMA-ScR evidence map</div>
+          <h1 className="max-w-4xl text-2xl font-extrabold leading-tight md:text-3xl">Artificial Intelligence in Antimicrobial Resistance Research</h1>
+          <p className="mt-2 max-w-3xl text-sm text-white/65">Explore the validated study-level extraction across geography, methods, pathogens, performance, clinical maturity and reporting practice.</p>
+          <div className="mt-7 grid grid-cols-2 gap-5 md:grid-cols-4 md:gap-8">
+            <StatCounter value={studies.length} label="Included studies" color="white" />
+            <StatCounter value={metadata.source_field_count} label="Extracted fields" color="#8DDDD4" />
+            <StatCounter value={uniqueCountries(studies)} label="Reported countries" color="#9FC2FF" />
+            <StatCounter value={aurocStudies.length} label="Studies with AUROC" color="#FFD180" />
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* KEY INSIGHT */}
-      <KeyInsight>
-        79% of AI/ML tools for AMR remain at proof-of-concept or internal validation stage — only 6 studies have reached clinical deployment.
-      </KeyInsight>
+      <main className="mx-auto max-w-7xl px-5 py-8 md:px-10">
+        <KeyInsight>
+          Among {maturityKnown} studies with a maturity classification, {percentage(earlyMaturity, maturityKnown)}% remain at proof-of-concept or internal-validation stages.
+        </KeyInsight>
 
-      {/* MATURITY CHART */}
-      <div className="px-10 mb-8">
-        <ChartSection figure="Figure 1" title="Distribution of Clinical Maturity Levels" caption={`Source: Dual-reviewer extraction, n=${studies.length} included studies`}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={maturityData} layout="vertical">
-              <XAxis type="number" tick={{ fontSize: 10 }} />
-              <YAxis type="category" dataKey="label" tick={{ fontSize: 10 }} width={90} />
-              <Tooltip />
-              <Bar dataKey="count" radius={[0, 4, 4, 0]}>
-                {maturityData.map((_, i) => <Cell key={i} fill={COLORS.maturity[i]} />)}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartSection>
-      </div>
-
-      {/* GLASS CARDS */}
-      <div className="px-10 mb-10">
-        <div className="grid grid-cols-4 gap-5">
-          <GlassCard label="Top Pathogen" value={topPathogen?.name || "\u2014"} detail={`${topPathogen?.value || 0} studies`} delay={0} />
-          <GlassCard label="Top AI Task" value={topTask?.name || "\u2014"} detail={`${topTask?.value || 0} studies`} delay={0.1} />
-          <GlassCard label="Median AUROC" value={medianAuroc?.toFixed(2) || "\u2014"} detail={`Across ${aurocStudies.length} reporting studies`} delay={0.2} />
-          <GlassCard label="Most Common Model" value={topModel?.name || "\u2014"} detail={`Used in ${topModel?.value || 0} studies`} delay={0.3} />
+        <div className="mb-8">
+          <ChartSection figure="Figure 1" title="Clinical maturity across included studies" caption={`Denominator: ${maturityKnown} studies with a reported maturity classification.`}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={maturityCounts} layout="vertical" margin={{ left: 8, right: 20 }}>
+                <XAxis type="number" tick={{ fontSize: 10 }} />
+                <YAxis type="category" dataKey="label" tick={{ fontSize: 10 }} width={90} />
+                <Tooltip />
+                <Bar dataKey="count" radius={[0, 4, 4, 0]}>
+                  {maturityCounts.map((_, index) => <Cell key={index} fill={COLORS.maturity[index]} />)}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartSection>
         </div>
-      </div>
 
-      {/* PRISMA FLOW */}
-      <ScrollReveal>
-        <div className="px-10 mb-10">
-          <div className="bg-white border border-gray-200 rounded-xl p-6 max-w-2xl mx-auto text-center">
-            <div className="text-xs font-semibold text-navy mb-4">PRISMA-ScR Study Flow</div>
-            <div className="flex items-center justify-center gap-3 text-xs">
-              <div className="bg-navy text-white px-4 py-2 rounded-lg font-bold">272<br/><span className="font-normal text-[10px]">Screened</span></div>
-              <div className="text-gray-300">&rarr;</div>
-              <div className="bg-teal text-white px-4 py-2 rounded-lg font-bold">252<br/><span className="font-normal text-[10px]">Included</span></div>
-              <div className="text-gray-300">+</div>
-              <div className="bg-danger text-white px-4 py-2 rounded-lg font-bold">20<br/><span className="font-normal text-[10px]">Excluded</span></div>
+        <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <GlassCard label="Most frequent pathogen" value={pathogenCounts[0]?.name || "Not reported"} detail={`${pathogenCounts[0]?.value || 0} studies`} />
+          <GlassCard label="Leading AI application" value={applicationCounts[0]?.name || "Not reported"} detail={`${applicationCounts[0]?.value || 0} studies`} delay={0.05} />
+          <GlassCard label="Median extracted AUROC" value={medianAuroc?.toFixed(2) || "Not available"} detail={`${aurocStudies.length} reporting studies`} delay={0.1} />
+          <GlassCard label="Most detected model family" value={modelCounts[0]?.name || "Not reported"} detail={`${modelCounts[0]?.value || 0} studies`} delay={0.15} />
+        </div>
+
+        <section aria-labelledby="explore-heading">
+          <div className="mb-4 flex items-end justify-between gap-4">
+            <div>
+              <div className="text-[10px] font-bold uppercase tracking-[2px] text-med-blue">Evidence domains</div>
+              <h2 id="explore-heading" className="mt-1 text-xl font-extrabold text-navy">Explore the review</h2>
             </div>
-            <div className="text-[10px] text-gray-400 mt-3">4 missing PDFs &bull; 31 reclassified after scope broadening</div>
+            <Link href="/explorer" className="inline-flex items-center gap-2 text-xs font-semibold text-med-blue hover:underline">
+              <FileSearch size={15} /> Open all studies
+            </Link>
           </div>
-        </div>
-      </ScrollReveal>
-
-      {/* NAVIGATION TILES */}
-      <div className="px-10 pb-16">
-        <ScrollReveal>
-          <div className="text-center text-xs font-bold text-navy uppercase tracking-[2px] mb-6">Explore the Data</div>
-        </ScrollReveal>
-        <div className="grid grid-cols-4 gap-4">
-          {NAV_TILES.map(({ href, icon: Icon, label, desc }, i) => (
-            <ScrollReveal key={href} delay={i * 0.05}>
-              <Link href={href} className="block bg-white border border-gray-200 rounded-xl p-5 text-center hover:-translate-y-1 hover:shadow-lg transition-all">
-                <Icon size={28} className="mx-auto text-med-blue mb-2" />
-                <div className="text-sm font-bold text-navy">{label}</div>
-                <div className="text-[10px] text-gray-400">{desc}</div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {NAV_TILES.map(({ href, icon: Icon, label, desc }) => (
+              <Link key={href} href={href} className="group border-t-2 border-transparent bg-white p-5 shadow-sm ring-1 ring-gray-200 transition hover:-translate-y-0.5 hover:border-med-blue hover:shadow-md">
+                <Icon size={20} className="mb-4 text-med-blue" />
+                <div className="text-sm font-bold text-navy group-hover:text-dark-blue">{label}</div>
+                <div className="mt-1 text-xs leading-relaxed text-gray-500">{desc}</div>
               </Link>
-            </ScrollReveal>
-          ))}
-        </div>
-      </div>
+            ))}
+          </div>
+        </section>
+      </main>
     </div>
   );
 }

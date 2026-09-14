@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AMR/AI Scoping Review Dashboard
 
-## Getting Started
+Read-only web dashboard for exploring the validated AMR/AI scoping-review extraction.
 
-First, run the development server:
+## Data
+
+The dashboard is generated from:
+
+`../extraction_run/collated.csv`
+
+Current release:
+
+- 346 studies
+- 215 extraction fields
+- Publication years 2000–2026
+
+Do not edit `public/data/amr_ai_collated.json` or `public/data/collated.csv` manually. Regenerate both from the canonical collation:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run data:build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The conversion keeps all populated source fields under each study's `raw` object and creates standardised summary fields for charts and filtering.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Run locally
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run dev
+```
 
-## Learn More
+Open http://localhost:3000.
 
-To learn more about Next.js, take a look at the following resources:
+## Verify
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run data:build
+/opt/homebrew/anaconda3/bin/python3 scripts/test_dashboard_data.py
+npm run lint
+npm run build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The production build is a static export in `out/` and uses `/amr-ai-dashboard` as its GitHub Pages base path.
 
-## Deploy on Vercel
+## Dashboard sections
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Overview
+- Geographic distribution
+- AI/ML landscape
+- Pathogens and resistance
+- Performance and clinical maturity
+- Reporting, transparency and equity
+- Publication trends
+- Study Explorer with filters, CSV download and all populated extraction fields
+- About and provenance
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+
+```bash
+npm run deploy
+```
+
+Deployment changes external state and should only be run after reviewing the generated site and confirming the target GitHub Pages repository.
