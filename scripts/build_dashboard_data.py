@@ -249,7 +249,7 @@ def build() -> dict:
 
 def validate(payload: dict) -> None:
     studies = payload["studies"]
-    assert len(studies) == 346, f"Expected 346 studies, got {len(studies)}"
+    assert len(studies) == 348, f"Expected 348 studies, got {len(studies)}"
     assert len({study["study_id"] for study in studies}) == len(studies), "Duplicate study IDs"
     assert payload["metadata"]["source_field_count"] == 215
     assert all(len(study["raw"]) <= 215 for study in studies)

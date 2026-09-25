@@ -20,7 +20,7 @@ class DashboardDataTests(unittest.TestCase):
         cls.studies = cls.payload["studies"]
 
     def test_expected_shape(self):
-        self.assertEqual(346, len(self.studies))
+        self.assertEqual(len(self.rows), len(self.studies))
         self.assertEqual(215, self.payload["metadata"]["source_field_count"])
 
     def test_ids_match_source_in_order(self):
